@@ -50,14 +50,35 @@ def get_site_settings():
 def home(request):
     """Homepage with hero section and featured content"""
     site_settings = get_site_settings()
-    featured_categories = Category.objects.filter(is_featured=True)[:6]
-    featured_images = GalleryImage.objects.filter(is_featured=True)[:8]
-    featured_testimonials = Testimonial.objects.filter(is_featured=True)[:3]
-    recent_awards = Award.objects.all()[:4]
     
-    # Get random images for hero carousel if no featured images
-    if not featured_images.exists():
-        featured_images = GalleryImage.objects.order_by('?')[:8]
+    # Initialize empty querysets to handle missing tables
+    featured_categories = Category.objects.none()
+    featured_images = GalleryImage.objects.none()
+    featured_testimonials = Testimonial.objects.none()
+    recent_awards = Award.objects.none()
+    
+    try:
+        featured_categories = Category.objects.filter(is_featured=True)[:6]
+    except:
+        pass
+    
+    try:
+        featured_images = GalleryImage.objects.filter(is_featured=True)[:8]
+        # Get random images for hero carousel if no featured images
+        if not featured_images.exists():
+            featured_images = GalleryImage.objects.order_by('?')[:8]
+    except:
+        pass
+    
+    try:
+        featured_testimonials = Testimonial.objects.filter(is_featured=True)[:3]
+    except:
+        pass
+    
+    try:
+        recent_awards = Award.objects.all()[:4]
+    except:
+        pass
     
     context = {
         'site_settings': site_settings,
