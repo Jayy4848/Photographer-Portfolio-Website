@@ -1,0 +1,255 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us - {{ site_settings.photographer_name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+.about-hero {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 120px 0 80px;
+    color: white;
+}
+
+.about-section {
+    padding: 80px 0;
+}
+
+.skill-bar {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 4px;
+    margin-bottom: 20px;
+}
+
+.skill-progress {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    height: 12px;
+    border-radius: 8px;
+    transition: width 2s ease;
+}
+
+.award-card {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+    margin-bottom: 30px;
+}
+
+.award-card:hover {
+    transform: translateY(-5px);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- About Hero Section -->
+<section class="about-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6" data-aos="fade-right">
+                <h1 class="display-4 mb-4">About {{ site_settings.photographer_name }}</h1>
+                <p class="lead mb-4">{{ site_settings.tagline }}</p>
+                <p class="mb-4">{{ site_settings.about_text }}</p>
+                <div class="d-flex gap-3">
+                    <a href="{% url 'photographer:contact' %}" class="btn btn-light btn-lg">
+                        <i class="fas fa-envelope"></i> Get In Touch
+                    </a>
+                    <a href="{% url 'photographer:gallery_list' %}" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-images"></i> View Gallery
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6" data-aos="fade-left">
+                <div class="text-center">
+                    <img src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&h=600&q=80" 
+                         alt="{{ site_settings.photographer_name }}" 
+                         class="img-fluid rounded shadow-lg"
+                         style="max-height: 600px; object-fit: cover;">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Experience & Skills Section -->
+<section class="about-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6" data-aos="fade-right">
+                <h2 class="mb-4">Our Expertise</h2>
+                <p class="mb-4">With years of experience in professional photography, we specialize in capturing life's most precious moments with artistic flair and technical excellence.</p>
+                
+                <div class="skills">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Wedding Photography</span>
+                            <span>95%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 95%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Portrait Photography</span>
+                            <span>90%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 90%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Event Photography</span>
+                            <span>88%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 88%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Photo Editing</span>
+                            <span>92%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 92%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6" data-aos="fade-left">
+                <h2 class="mb-4">Why Choose Us?</h2>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="text-center">
+                            <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                <i class="fas fa-camera fa-lg"></i>
+                            </div>
+                            <h5>Professional Equipment</h5>
+                            <p class="text-muted">Latest professional cameras and lighting equipment</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="text-center">
+                            <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                <i class="fas fa-heart fa-lg"></i>
+                            </div>
+                            <h5>Passionate Approach</h5>
+                            <p class="text-muted">We love what we do and it shows in our work</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="text-center">
+                            <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                <i class="fas fa-clock fa-lg"></i>
+                            </div>
+                            <h5>Timely Delivery</h5>
+                            <p class="text-muted">Fast turnaround without compromising quality</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="text-center">
+                            <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                <i class="fas fa-star fa-lg"></i>
+                            </div>
+                            <h5>5-Star Service</h5>
+                            <p class="text-muted">Exceptional customer service and satisfaction</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Awards Section -->
+{% if awards %}
+<section class="about-section bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 mb-3" data-aos="fade-up">Awards & Recognition</h2>
+            <p class="lead text-muted" data-aos="fade-up" data-aos-delay="100">
+                Honored to be recognized for our work in photography
+            </p>
+        </div>
+        
+        <div class="row">
+            {% for award in awards %}
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{% widthratio forloop.counter 1 100 %}">
+                <div class="award-card">
+                    {% if award.image %}
+                    <img src="{{ award.image.url }}" alt="{{ award.title }}" class="img-fluid rounded mb-3">
+                    {% endif %}
+                    <h5>{{ award.title }}</h5>
+                    <p class="text-primary">{{ award.organization }}</p>
+                    <p class="text-muted">{{ award.year }}</p>
+                    {% if award.description %}
+                    <p>{{ award.description }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Call to Action -->
+<section class="about-section bg-dark text-white">
+    <div class="container text-center">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h2 class="display-5 mb-4" data-aos="fade-up">Ready to Work Together?</h2>
+                <p class="lead mb-5" data-aos="fade-up" data-aos-delay="100">
+                    Let's create something beautiful together. Contact us today to discuss your photography needs.
+                </p>
+                <div class="d-flex flex-wrap justify-content-center gap-3" data-aos="fade-up" data-aos-delay="200">
+                    <a href="{% url 'photographer:contact' %}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-envelope"></i> Contact Us
+                    </a>
+                    <a href="tel:{{ site_settings.phone }}" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-phone"></i> Call Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize AOS
+    AOS.init({
+        duration: 1000,
+        offset: 100,
+        once: true
+    });
+    
+    // Animate skill bars on scroll
+    const skillBars = document.querySelectorAll('.skill-progress');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const width = entry.target.style.width;
+                entry.target.style.width = '0%';
+                setTimeout(() => {
+                    entry.target.style.width = width;
+                }, 100);
+            }
+        });
+    });
+    
+    skillBars.forEach(bar => observer.observe(bar));
+});
+</script>
+{% endblock %} 

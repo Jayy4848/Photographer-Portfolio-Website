@@ -1,0 +1,766 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+/* Custom styles for home page */
+.hero-section {
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.hero-video, .hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, rgba(0,0,0,0.7), rgba(0,0,0,0.3));
+    z-index: 2;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    color: white;
+    max-width: 800px;
+    padding: 0 20px;
+}
+
+.hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    opacity: 0;
+    transform: translateY(50px);
+}
+
+.hero-subtitle {
+    font-size: 1.5rem;
+    font-weight: 300;
+    margin-bottom: 2rem;
+    opacity: 0;
+    transform: translateY(50px);
+}
+
+.hero-cta {
+    opacity: 0;
+    transform: translateY(50px);
+}
+
+.scroll-indicator {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    color: white;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+    40% { transform: translateX(-50%) translateY(-10px); }
+    60% { transform: translateX(-50%) translateY(-5px); }
+}
+
+.parallax-section {
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+.floating-gallery {
+    perspective: 1000px;
+}
+
+.gallery-cube {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    transform-style: preserve-3d;
+    margin: 0 auto;
+    animation: rotateY 20s infinite linear;
+}
+
+.gallery-cube .face {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border: 2px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.gallery-cube .face img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.gallery-cube .front { transform: translateZ(150px); }
+.gallery-cube .back { transform: translateZ(-150px) rotateY(180deg); }
+.gallery-cube .right { transform: rotateY(90deg) translateZ(150px); }
+.gallery-cube .left { transform: rotateY(-90deg) translateZ(150px); }
+.gallery-cube .top { transform: rotateX(90deg) translateZ(150px); }
+.gallery-cube .bottom { transform: rotateX(-90deg) translateZ(150px); }
+
+@keyframes rotateY {
+    from { transform: rotateY(0deg); }
+    to { transform: rotateY(360deg); }
+}
+
+.category-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+    height: 400px;
+    cursor: pointer;
+    transition: all 0.4s ease;
+}
+
+.category-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.category-card .card-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.4s ease;
+}
+
+.category-card:hover .card-bg {
+    transform: scale(1.1);
+}
+
+.category-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7));
+    display: flex;
+    align-items: flex-end;
+    padding: 30px;
+    color: white;
+}
+
+.testimonial-carousel {
+    padding: 100px 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.testimonial-card {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    color: white;
+    transition: transform 0.3s ease;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-5px);
+}
+
+.client-photo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    border: 3px solid rgba(255,255,255,0.3);
+}
+
+.stats-section {
+    padding: 100px 0;
+    background: #1a1a1a;
+    color: white;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 30px;
+}
+
+.stat-number {
+    font-size: 4rem;
+    font-weight: 700;
+    color: #667eea;
+    display: block;
+}
+
+.stat-label {
+    font-size: 1.2rem;
+    margin-top: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+</style>
+{% endblock %}
+
+{% block body_class %}home-page{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section with Cinematic Hill Station Videos -->
+<section class="hero-section position-relative" style="height: 100vh; overflow: hidden;">
+    <!-- Cinematic Seasonal Videos -->
+    <div class="position-absolute w-100 h-100" style="z-index: 1;" id="seasonalVideos">
+        <!-- Monsoon Season - 3D Realistic Rainy Hills -->
+        <video class="w-100 h-100 seasonal-video active" 
+               autoplay muted loop playsinline preload="auto"
+               style="object-fit: cover; position: absolute; opacity: 1; transition: opacity 4s ease-in-out; filter: brightness(0.7) contrast(1.3) saturate(1.4) hue-rotate(10deg);">
+            <source src="https://videos.pexels.com/video-files/1851190/1851190-uhd_2560_1440_25fps.mp4" type="video/mp4">
+            <source src="https://videos.pexels.com/video-files/2491283/2491283-uhd_2560_1440_25fps.mp4" type="video/mp4">
+            <!-- Fallback for monsoon -->
+            <img src="https://images.unsplash.com/photo-1464822759844-d150baef493e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080&q=80" 
+                 alt="Monsoon hill station" class="w-100 h-100" style="object-fit: cover;">
+        </video>
+        
+        <!-- Summer Season - 3D Golden Hour Mountains -->
+        <video class="w-100 h-100 seasonal-video" 
+               muted loop playsinline preload="auto"
+               style="object-fit: cover; position: absolute; opacity: 0; transition: opacity 4s ease-in-out; filter: brightness(0.9) contrast(1.2) saturate(1.5) hue-rotate(-5deg);">
+            <source src="https://videos.pexels.com/video-files/3571264/3571264-uhd_2560_1440_25fps.mp4" type="video/mp4">
+            <source src="https://videos.pexels.com/video-files/2491318/2491318-uhd_2560_1440_25fps.mp4" type="video/mp4">
+            <!-- Fallback for summer -->
+            <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080&q=80" 
+                 alt="Summer hill station" class="w-100 h-100" style="object-fit: cover;">
+        </video>
+        
+        <!-- Winter Season - 3D Snow Covered Peaks -->
+        <video class="w-100 h-100 seasonal-video" 
+               muted loop playsinline preload="auto"
+               style="object-fit: cover; position: absolute; opacity: 0; transition: opacity 4s ease-in-out; filter: brightness(0.85) contrast(1.1) saturate(0.8) hue-rotate(5deg);">
+            <source src="https://videos.pexels.com/video-files/3209828/3209828-uhd_2560_1440_25fps.mp4" type="video/mp4">
+            <source src="https://videos.pexels.com/video-files/4440421/4440421-uhd_2560_1440_25fps.mp4" type="video/mp4">
+            <!-- Fallback for winter -->
+            <img src="https://images.unsplash.com/photo-1551582045-6ec9c11d8697?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080&q=80" 
+                 alt="Winter hill station" class="w-100 h-100" style="object-fit: cover;">
+        </video>
+    </div>
+    
+    <!-- Static Hill Station Background (only if videos fail) -->
+    <div class="position-absolute w-100 h-100" style="z-index: 0;">
+        <img src="https://images.unsplash.com/photo-1464822759844-d150baef493e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080&q=80" 
+             alt="Hill station background" class="w-100 h-100" style="object-fit: cover; opacity: 0.3;">
+    </div>
+    
+    <!-- Cinematic Overlay for Professional Look -->
+    <div class="position-absolute w-100 h-100" style="background: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(102, 126, 234, 0.2) 50%, rgba(0, 0, 0, 0.4) 100%); z-index: 2;"></div>
+    
+    <!-- Film Grain Effect for Cinematic Feel -->
+    <div class="position-absolute w-100 h-100" style="background: url('data:image/svg+xml,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" stitchTiles="stitch"/><feColorMatrix in="colorNoise" type="saturate" values="0"/></filter></defs><rect width="100%" height="100%" filter="url(%23noiseFilter)" opacity="0.05"/></svg>'); z-index: 2; pointer-events: none;"></div>
+    
+    <!-- Content -->
+    <div class="container position-relative h-100 d-flex align-items-center" style="z-index: 3;">
+        <div class="row w-100">
+            <div class="col-lg-8 text-white">
+                <h1 class="display-1 fw-bold mb-4" style="
+                    text-shadow: 
+                        4px 4px 8px rgba(0,0,0,0.8),
+                        2px 2px 4px rgba(102, 126, 234, 0.3),
+                        -2px -2px 4px rgba(118, 75, 162, 0.2);
+                    animation: fadeInUp 1.5s ease-out;
+                    font-weight: 900;
+                    letter-spacing: -2px;
+                    line-height: 0.9;
+                ">
+                    {{ site_settings.hero_title|default:"3D Cinematic<br/>Hill Station<br/>Photography" }}
+                </h1>
+                <p class="lead mb-5 fs-3" style="
+                    text-shadow: 
+                        3px 3px 6px rgba(0,0,0,0.7),
+                        1px 1px 2px rgba(102, 126, 234, 0.2);
+                    animation: fadeInUp 1.5s ease-out 0.5s both;
+                    line-height: 1.3;
+                    max-width: 600px;
+                ">
+                    {{ site_settings.hero_subtitle|default:"Immersive 3D cinematography capturing the breathtaking reality of hill stations - from mystical monsoons to golden summers and pristine winters" }}
+                </p>
+                <div class="d-flex flex-wrap gap-3" style="animation: fadeInUp 1.2s ease-out 0.8s both;">
+                    <a href="{% url 'photographer:gallery_list' %}" class="btn btn-lg px-5 py-3" style="
+                        font-weight: 700; 
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        border: none;
+                        color: white;
+                        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+                        border-radius: 50px;
+                        transition: all 0.3s ease;
+                    ">
+                        <i class="fas fa-images me-2"></i>View Portfolio
+                    </a>
+                    <a href="{% url 'photographer:contact' %}" class="btn btn-lg px-5 py-3" style="
+                        font-weight: 700; 
+                        background: rgba(255, 255, 255, 0.15);
+                        backdrop-filter: blur(15px);
+                        border: 2px solid rgba(102, 126, 234, 0.6);
+                        color: white;
+                        border-radius: 50px;
+                        transition: all 0.3s ease;
+                    ">
+                        <i class="fas fa-calendar me-2"></i>Book Session
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Professional Camera Settings Overlay -->
+    <div class="position-absolute" style="top: 50px; right: 50px; z-index: 3;">
+        <div class="glass-panel p-3" style="background: rgba(0,0,0,0.3); backdrop-filter: blur(10px); border-radius: 10px; border: 1px solid rgba(255,255,255,0.2);">
+            <div class="text-white text-end" style="font-family: 'Courier New', monospace; font-size: 0.85rem;">
+                <div>📹 RECORDING</div>
+                <div style="opacity: 0.7;">4K • 24fps</div>
+                <div style="opacity: 0.7;">f/2.8 • ISO 400</div>
+            </div>
+        </div>
+    </div>
+    
+
+    
+    <!-- Scroll indicator -->
+    <div class="position-absolute bottom-0 start-50 translate-middle-x text-white pb-4" style="z-index: 3;">
+        <div class="text-center">
+            <small class="d-block mb-2 opacity-75" style="font-weight: 500;">DISCOVER MORE</small>
+            <i class="fas fa-chevron-down fa-2x" style="animation: bounce 2s infinite; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));"></i>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Categories Section -->
+{% if featured_categories %}
+<section class="parallax-section py-5" data-aos="fade-up">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-4 mb-3" data-aos="fade-up">Our Photography Services</h2>
+            <p class="lead text-muted" data-aos="fade-up" data-aos-delay="100">
+                Capturing life's most precious moments with artistic vision and technical excellence
+            </p>
+        </div>
+        
+        <div class="row g-4">
+            {% for category in featured_categories %}
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{% widthratio forloop.counter 1 100 %}">
+                <a href="{% url 'photographer:gallery_detail' category.slug %}" class="text-decoration-none">
+                    <div class="category-card">
+                        <div class="card-bg" style="background-image: url('{% if category.cover_image %}{{ category.cover_image.url }}{% else %}https://picsum.photos/400/400?random={{ category.id }}{% endif %}');"></div>
+                        <div class="category-overlay">
+                            <div>
+                                <h4 class="mb-2">{{ category.name }}</h4>
+                                <p class="mb-0">{{ category.description|truncatechars:100 }}</p>
+                                <small class="text-light">{{ category.image_count }} Photos</small>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- 3D Gallery Showcase -->
+{% if featured_images %}
+<section class="parallax-section py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-4 mb-3" data-aos="fade-up">Featured Gallery</h2>
+            <p class="lead text-muted" data-aos="fade-up" data-aos-delay="100">
+                A cinematic journey through our finest work
+            </p>
+        </div>
+        
+        <div class="floating-gallery" data-aos="fade-up" data-aos-delay="200">
+            <div class="gallery-cube">
+                {% for image in featured_images|slice:":6" %}
+                <div class="face {% cycle 'front' 'back' 'right' 'left' 'top' 'bottom' %}">
+                    <img src="{% if image.medium %}{{ image.medium.url }}{% elif image.image %}{{ image.image.url }}{% else %}https://picsum.photos/300/300?random={{ image.id }}{% endif %}" 
+                         alt="{{ image.title }}" 
+                         data-glightbox="gallery">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Image Grid Below Cube -->
+        <div class="row g-3 mt-5">
+            {% for image in featured_images %}
+            <div class="col-lg-3 col-md-4 col-sm-6" data-aos="zoom-in" data-aos-delay="{% widthratio forloop.counter 1 50 %}">
+                <div class="position-relative overflow-hidden rounded" style="height: 250px;">
+                    <img src="{% if image.thumbnail %}{{ image.thumbnail.url }}{% elif image.image %}{{ image.image.url }}{% else %}https://picsum.photos/300/250?random={{ image.id }}{% endif %}" 
+                         alt="{{ image.title }}" 
+                         class="w-100 h-100 object-cover"
+                         style="object-fit: cover; transition: transform 0.3s ease;"
+                         data-glightbox="gallery"
+                         onmouseover="this.style.transform='scale(1.1)'"
+                         onmouseout="this.style.transform='scale(1)'">
+                    <div class="position-absolute bottom-0 start-0 w-100 p-3 bg-gradient text-white">
+                        <h6 class="mb-0">{{ image.title|default:"Beautiful Moment" }}</h6>
+                        <small>{{ image.category.name }}</small>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-5">
+            <a href="{% url 'photographer:gallery_list' %}" class="btn btn-primary btn-lg">
+                <i class="fas fa-eye"></i> View Full Gallery
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Statistics Section -->
+<section class="stats-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-6" data-aos="fade-up">
+                <div class="stat-item">
+                    <span class="stat-number" data-target="500">0</span>
+                    <span class="stat-label">Happy Clients</span>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="stat-item">
+                    <span class="stat-number" data-target="1000">0</span>
+                    <span class="stat-label">Events Captured</span>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="stat-item">
+                    <span class="stat-number" data-target="50000">0</span>
+                    <span class="stat-label">Photos Taken</span>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                <div class="stat-item">
+                    <span class="stat-number" data-target="8">0</span>
+                    <span class="stat-label">Years Experience</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+{% if featured_testimonials %}
+<section class="testimonial-carousel">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-4 mb-3 text-white" data-aos="fade-up">What Our Clients Say</h2>
+            <p class="lead text-white-50" data-aos="fade-up" data-aos-delay="100">
+                Real stories from real clients
+            </p>
+        </div>
+        
+        <div class="swiper testimonialSwiper">
+            <div class="swiper-wrapper">
+                {% for testimonial in featured_testimonials %}
+                <div class="swiper-slide">
+                    <div class="testimonial-card" data-aos="fade-up" data-aos-delay="{% widthratio forloop.counter 1 100 %}">
+                        {% if testimonial.client_photo %}
+                        <img src="{{ testimonial.client_photo_thumbnail.url }}" alt="{{ testimonial.client_name }}" class="client-photo">
+                        {% else %}
+                        <!-- Generate unique profile photos for each testimonial on home page -->
+                        {% if testimonial.id == 1 %}
+                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80" 
+                             alt="{{ testimonial.client_name }}" class="client-photo">
+                        {% elif testimonial.id == 2 %}
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80" 
+                             alt="{{ testimonial.client_name }}" class="client-photo">
+                        {% elif testimonial.id == 3 %}
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80" 
+                             alt="{{ testimonial.client_name }}" class="client-photo">
+                        {% elif testimonial.id == 4 %}
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80" 
+                             alt="{{ testimonial.client_name }}" class="client-photo">
+                        {% elif testimonial.id == 5 %}
+                        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80" 
+                             alt="{{ testimonial.client_name }}" class="client-photo">
+                        {% elif testimonial.id == 6 %}
+                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80" 
+                             alt="{{ testimonial.client_name }}" class="client-photo">
+                        {% else %}
+                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80" 
+                             alt="{{ testimonial.client_name }}" class="client-photo">
+                        {% endif %}
+                        {% endif %}
+                        
+                        <div class="stars mb-3">
+                            {% for star in testimonial.star_range %}
+                            <i class="fas fa-star text-warning"></i>
+                            {% endfor %}
+                            {% for star in testimonial.empty_star_range %}
+                            <i class="far fa-star text-warning"></i>
+                            {% endfor %}
+                        </div>
+                        
+                        <blockquote class="mb-4">
+                            "{{ testimonial.testimonial_text }}"
+                        </blockquote>
+                        
+                        <h5 class="mb-1">{{ testimonial.client_name }}</h5>
+                        <small class="text-white-50">{{ testimonial.event_type }}</small>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Call to Action Section -->
+<section class="py-5 bg-dark text-white">
+    <div class="container text-center">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h2 class="display-5 mb-4" data-aos="fade-up">Ready to Capture Your Special Moments?</h2>
+                <p class="lead mb-5" data-aos="fade-up" data-aos-delay="100">
+                    Let's create beautiful memories together. Contact us today to discuss your photography needs.
+                </p>
+                <div class="d-flex flex-wrap justify-content-center gap-3" data-aos="fade-up" data-aos-delay="200">
+                    <a href="{% url 'photographer:contact' %}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-envelope"></i> Get In Touch
+                    </a>
+                    <a href="{% url 'photographer:about' %}" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-user"></i> Learn More About Us
+                    </a>
+                    {% if site_settings.whatsapp_number %}
+                    <a href="https://wa.me/{{ site_settings.whatsapp_number }}" target="_blank" class="btn btn-success btn-lg">
+                        <i class="fab fa-whatsapp"></i> WhatsApp
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize AOS
+    AOS.init({
+        duration: 1000,
+        offset: 100,
+        once: true
+    });
+    
+    // Hero animations
+    gsap.timeline()
+        .to('.hero-title', { duration: 1, opacity: 1, y: 0, ease: 'power3.out' })
+        .to('.hero-subtitle', { duration: 1, opacity: 1, y: 0, ease: 'power3.out' }, '-=0.5')
+        .to('.hero-cta', { duration: 1, opacity: 1, y: 0, ease: 'power3.out' }, '-=0.5');
+    
+    // Initialize Swiper for testimonials
+    const testimonialSwiper = new Swiper('.testimonialSwiper', {
+        slidesPerView: 1,
+        spaceBetween: 30,
+        autoplay: {
+            delay: 5000,
+            disableOnInteraction: false,
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        breakpoints: {
+            768: {
+                slidesPerView: 2,
+            },
+            1024: {
+                slidesPerView: 3,
+            }
+        }
+    });
+    
+    // Animated counters
+    const observerOptions = {
+        threshold: 0.7
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const target = entry.target;
+                const finalValue = parseInt(target.getAttribute('data-target'));
+                animateCounter(target, finalValue);
+                observer.unobserve(target);
+            }
+        });
+    }, observerOptions);
+    
+    document.querySelectorAll('.stat-number').forEach(counter => {
+        observer.observe(counter);
+    });
+    
+    function animateCounter(element, target) {
+        let current = 0;
+        const increment = target / 100;
+        const timer = setInterval(() => {
+            current += increment;
+            element.textContent = Math.floor(current);
+            if (current >= target) {
+                element.textContent = target;
+                clearInterval(timer);
+            }
+        }, 20);
+    }
+    
+    // Ensure GLightbox works on this page
+    setTimeout(() => {
+        if (!window.lightbox && typeof GLightbox !== 'undefined') {
+            console.log('Fallback: Initializing GLightbox for home page');
+            window.lightbox = GLightbox({
+                selector: '[data-glightbox]',
+                touchNavigation: true,
+                loop: true,
+                autoplayVideos: false
+            });
+        } else if (window.refreshLightbox) {
+            console.log('Refreshing existing lightbox for home page');
+            window.refreshLightbox();
+        }
+    }, 1000);
+    
+    // Seasonal Video Slideshow for Hero Section
+    function initSeasonalVideoSlideshow() {
+        const videos = document.querySelectorAll('.seasonal-video');
+        const seasonIndicator = document.getElementById('seasonIndicator');
+        const seasons = ['MONSOON', 'SUMMER', 'WINTER'];
+        let currentIndex = 0;
+        
+        // Preload all videos
+        videos.forEach((video, index) => {
+            video.addEventListener('loadeddata', () => {
+                console.log(`Video ${index + 1} loaded successfully`);
+            });
+            
+            video.addEventListener('error', (e) => {
+                console.log(`Video ${index + 1} failed to load, using fallback image`);
+                // Video will automatically show fallback image
+            });
+            
+            // Load video metadata
+            video.load();
+        });
+        
+        function showNextVideo() {
+            // Fade out current video
+            videos[currentIndex].style.opacity = '0';
+            videos[currentIndex].classList.remove('active');
+            
+            // Move to next video
+            currentIndex = (currentIndex + 1) % videos.length;
+            
+            // Fade in next video and start playing
+            setTimeout(() => {
+                const nextVideo = videos[currentIndex];
+                nextVideo.style.opacity = '1';
+                nextVideo.classList.add('active');
+                
+                // Start playing the video
+                nextVideo.currentTime = 0;
+                nextVideo.play().catch(e => {
+                    console.log('Video autoplay prevented, video will still be visible');
+                });
+                
+                // Update season indicator
+                if (seasonIndicator) {
+                    seasonIndicator.textContent = seasons[currentIndex];
+                    seasonIndicator.className = `badge px-3 py-2 ${
+                        currentIndex === 0 ? 'bg-info text-white' : 
+                        currentIndex === 1 ? 'bg-warning text-dark' : 
+                        'bg-light text-dark'
+                    }`;
+                }
+            }, 2000);
+        }
+        
+        // Start first video
+        if (videos.length > 0) {
+            videos[0].play().catch(e => {
+                console.log('First video autoplay prevented, but video is still visible');
+            });
+        }
+        
+        // Change video every 10 seconds for better viewing experience
+        setInterval(showNextVideo, 10000);
+        
+        // Initialize first indicator
+        if (seasonIndicator) {
+            seasonIndicator.textContent = seasons[0];
+            seasonIndicator.className = 'badge bg-info text-white px-3 py-2';
+        }
+    }
+    
+    // Initialize seasonal video slideshow
+    initSeasonalVideoSlideshow();
+    
+    // Parallax effects
+    gsap.registerPlugin(ScrollTrigger);
+    
+    // Floating elements
+    gsap.to('.gallery-cube', {
+        y: -30,
+        rotation: 5,
+        duration: 3,
+        ease: 'power2.inOut',
+        repeat: -1,
+        yoyo: true
+    });
+    
+    // Parallax backgrounds
+    gsap.utils.toArray('.parallax-section').forEach(section => {
+        gsap.to(section, {
+            yPercent: -50,
+            ease: 'none',
+            scrollTrigger: {
+                trigger: section,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: true
+            }
+        });
+    });
+});
+</script>
+{% endblock %} 

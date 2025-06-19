@@ -1,0 +1,317 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Testimonials - {{ site_settings.photographer_name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+.testimonials-hero {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 120px 0 80px;
+    color: white;
+}
+
+.testimonial-card {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+}
+
+.testimonial-card::before {
+    content: '"';
+    position: absolute;
+    top: -20px;
+    left: 30px;
+    font-size: 80px;
+    color: #667eea;
+    font-family: serif;
+    line-height: 1;
+}
+
+.client-photo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 20px;
+    border: 4px solid #667eea;
+}
+
+.rating {
+    color: #ffc107;
+    margin-bottom: 20px;
+}
+
+.testimonial-text {
+    font-style: italic;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 25px;
+}
+
+.client-info h5 {
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.client-info .event-type {
+    color: #667eea;
+    font-weight: 500;
+}
+
+.filter-buttons {
+    margin-bottom: 50px;
+}
+
+.filter-btn {
+    background: transparent;
+    border: 2px solid #667eea;
+    color: #667eea;
+    padding: 10px 25px;
+    border-radius: 50px;
+    margin: 5px;
+    transition: all 0.3s ease;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    background: #667eea;
+    color: white;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Testimonials Hero Section -->
+<section class="testimonials-hero">
+    <div class="container">
+        <div class="text-center">
+            <h1 class="display-4 mb-4" data-aos="fade-up">What Our Clients Say</h1>
+            <p class="lead mb-0" data-aos="fade-up" data-aos-delay="100">
+                Real stories from real clients who trusted us with their special moments
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Filter Buttons -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center filter-buttons" data-aos="fade-up">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="wedding">Wedding</button>
+            <button class="filter-btn" data-filter="birthday">Birthday</button>
+            <button class="filter-btn" data-filter="corporate">Corporate</button>
+            <button class="filter-btn" data-filter="other">Other Events</button>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Grid -->
+<section class="pb-5">
+    <div class="container">
+        {% if testimonials %}
+        <div class="row" id="testimonials-container">
+            {% for testimonial in testimonials %}
+            <div class="col-lg-4 col-md-6 testimonial-item" 
+                 data-category="{{ testimonial.event_type|lower }}"
+                 data-aos="fade-up" 
+                 data-aos-delay="{% widthratio forloop.counter 1 100 %}">
+                <div class="testimonial-card">
+                    <div class="text-center">
+                        {% if testimonial.client_photo %}
+                        <img src="{{ testimonial.client_photo.url }}" 
+                             alt="{{ testimonial.client_name }}" 
+                             class="client-photo">
+                        {% else %}
+                        <!-- Generate unique profile photos for each testimonial -->
+                        {% if testimonial.id == 1 %}
+                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80" 
+                             alt="{{ testimonial.client_name }}" 
+                             class="client-photo">
+                        {% elif testimonial.id == 2 %}
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80" 
+                             alt="{{ testimonial.client_name }}" 
+                             class="client-photo">
+                        {% elif testimonial.id == 3 %}
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80" 
+                             alt="{{ testimonial.client_name }}" 
+                             class="client-photo">
+                        {% elif testimonial.id == 4 %}
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80" 
+                             alt="{{ testimonial.client_name }}" 
+                             class="client-photo">
+                        {% elif testimonial.id == 5 %}
+                        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80" 
+                             alt="{{ testimonial.client_name }}" 
+                             class="client-photo">
+                        {% elif testimonial.id == 6 %}
+                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80" 
+                             alt="{{ testimonial.client_name }}" 
+                             class="client-photo">
+                        {% elif testimonial.id == 7 %}
+                        <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80" 
+                             alt="{{ testimonial.client_name }}" 
+                             class="client-photo">
+                        {% elif testimonial.id == 8 %}
+                        <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80" 
+                             alt="{{ testimonial.client_name }}" 
+                             class="client-photo">
+                        {% elif testimonial.id == 9 %}
+                        <img src="https://images.unsplash.com/photo-1525134479668-1bee5c7c6845?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80" 
+                             alt="{{ testimonial.client_name }}" 
+                             class="client-photo">
+                        {% elif testimonial.id == 10 %}
+                        <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80" 
+                             alt="{{ testimonial.client_name }}" 
+                             class="client-photo">
+                        {% else %}
+                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80" 
+                             alt="{{ testimonial.client_name }}" 
+                             class="client-photo">
+                        {% endif %}
+                        {% endif %}
+                        
+                        <div class="rating">
+                            {% for star in testimonial.star_range %}
+                            <i class="fas fa-star"></i>
+                            {% endfor %}
+                            {% for star in testimonial.empty_star_range %}
+                            <i class="far fa-star"></i>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="testimonial-text">
+                        {{ testimonial.testimonial_text }}
+                    </div>
+                    
+                    <div class="text-center client-info">
+                        <h5>{{ testimonial.client_name }}</h5>
+                        {% if testimonial.event_type %}
+                        <p class="event-type mb-1">{{ testimonial.event_type }}</p>
+                        {% endif %}
+                        {% if testimonial.event_date %}
+                        <small class="text-muted">{{ testimonial.event_date|date:"F Y" }}</small>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <div class="py-5">
+                <i class="fas fa-comments fa-4x text-muted mb-4"></i>
+                <h3 class="text-muted">No testimonials yet</h3>
+                <p class="text-muted">We're working hard to provide excellent service. Testimonials will appear here soon!</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up">
+                <div class="py-4">
+                    <h2 class="display-4 text-primary mb-2">500+</h2>
+                    <h5>Happy Clients</h5>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="py-4">
+                    <h2 class="display-4 text-primary mb-2">1000+</h2>
+                    <h5>Events Captured</h5>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="py-4">
+                    <h2 class="display-4 text-primary mb-2">98%</h2>
+                    <h5>Satisfaction Rate</h5>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="py-4">
+                    <h2 class="display-4 text-primary mb-2">8+</h2>
+                    <h5>Years Experience</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 bg-dark text-white">
+    <div class="container text-center">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h2 class="display-5 mb-4" data-aos="fade-up">Want to Add Your Story?</h2>
+                <p class="lead mb-5" data-aos="fade-up" data-aos-delay="100">
+                    Book your session today and become part of our success stories.
+                </p>
+                <div class="d-flex flex-wrap justify-content-center gap-3" data-aos="fade-up" data-aos-delay="200">
+                    <a href="{% url 'photographer:contact' %}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-calendar"></i> Book Now
+                    </a>
+                    <a href="{% url 'photographer:gallery_list' %}" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-images"></i> View Portfolio
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize AOS
+    AOS.init({
+        duration: 1000,
+        offset: 100,
+        once: true
+    });
+    
+    // Filter functionality
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const testimonialItems = document.querySelectorAll('.testimonial-item');
+    
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove active class from all buttons
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            // Add active class to clicked button
+            this.classList.add('active');
+            
+            const filterValue = this.getAttribute('data-filter');
+            
+            testimonialItems.forEach(item => {
+                if (filterValue === 'all' || item.getAttribute('data-category').includes(filterValue)) {
+                    item.style.display = 'block';
+                    // Re-trigger AOS animation
+                    item.classList.remove('aos-animate');
+                    setTimeout(() => {
+                        item.classList.add('aos-animate');
+                    }, 100);
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    });
+});
+</script>
+{% endblock %} 

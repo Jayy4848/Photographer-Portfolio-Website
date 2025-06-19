@@ -1,0 +1,309 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Search - {{ site_settings.photographer_name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+.search-hero {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 120px 0 80px;
+    color: white;
+}
+
+.search-form {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 30px;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.search-input {
+    background: rgba(255,255,255,0.9);
+    border: none;
+    border-radius: 50px;
+    padding: 15px 25px;
+    font-size: 1.1rem;
+    width: 100%;
+}
+
+.search-btn {
+    border-radius: 50px;
+    padding: 15px 30px;
+    font-weight: 600;
+}
+
+.result-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 30px;
+}
+
+.result-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.result-image {
+    height: 250px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.result-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.7));
+    display: flex;
+    align-items: flex-end;
+    padding: 20px;
+}
+
+.category-badge {
+    background: #667eea;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+.search-filters {
+    background: #f8f9fa;
+    padding: 30px 0;
+}
+
+.filter-chip {
+    background: white;
+    border: 2px solid #e9ecef;
+    padding: 8px 20px;
+    border-radius: 25px;
+    margin: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: #333;
+    display: inline-block;
+}
+
+.filter-chip:hover,
+.filter-chip.active {
+    border-color: #667eea;
+    background: #667eea;
+    color: white;
+    text-decoration: none;
+}
+
+.no-results {
+    text-align: center;
+    padding: 80px 0;
+}
+
+.search-suggestions {
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Search Hero Section -->
+<section style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 120px 0 80px; color: white;">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h1 class="display-4 mb-4">Search Our Gallery</h1>
+            <p class="lead">Find the perfect photos from our extensive collection</p>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <form method="GET" action="{% url 'photographer:search' %}">
+                    <div class="row align-items-center">
+                        <div class="col-lg-8 col-md-7 mb-3 mb-md-0">
+                            <input type="text" 
+                                   name="q" 
+                                   class="form-control form-control-lg" 
+                                   placeholder="Search for wedding, portrait, events..."
+                                   value="{{ query|default:'' }}">
+                        </div>
+                        <div class="col-lg-4 col-md-5">
+                            <button type="submit" class="btn btn-light btn-lg w-100">
+                                <i class="fas fa-search"></i> Search
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Search Filters -->
+{% if categories %}
+<section class="search-filters">
+    <div class="container">
+        <div class="text-center">
+            <h5 class="mb-3">Browse by Category</h5>
+            <div class="filter-chips">
+                <a href="{% url 'photographer:search' %}" class="filter-chip {% if not request.GET.category %}active{% endif %}">
+                    All Categories
+                </a>
+                {% for category in categories %}
+                <a href="?category={{ category.slug }}{% if query %}&q={{ query }}{% endif %}" 
+                   class="filter-chip {% if request.GET.category == category.slug %}active{% endif %}">
+                    {{ category.name }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Search Results -->
+<section class="py-5">
+    <div class="container">
+        {% if query %}
+        <div class="mb-4">
+            <h3>Search Results for "{{ query }}"</h3>
+            {% if results %}
+            <p class="text-muted">{{ results|length }} result{{ results|length|pluralize }} found</p>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        {% if results %}
+        <div class="row">
+            {% for result in results %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card">
+                    <img src="{% if result.image %}{{ result.image.url }}{% else %}https://picsum.photos/400/300?random={{ result.id }}{% endif %}"  
+                         class="card-img-top" alt="{{ result.title }}" style="height: 250px; object-fit: cover; cursor: pointer;"
+                         data-glightbox="gallery-search"
+                         data-title="{{ result.title|default:'Beautiful Moment' }}"
+                         data-description="{{ result.description|default:'' }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ result.title|default:"Beautiful Moment" }}</h5>
+                        <p class="card-text">{{ result.description|truncatechars:100 }}</p>
+                        <small class="text-muted">{{ result.category.name }}</small>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% elif query %}
+        <!-- No Results -->
+        <div class="text-center py-5">
+            <i class="fas fa-search fa-4x text-muted mb-4"></i>
+            <h3 class="text-muted">No results found for "{{ query }}"</h3>
+            <p class="text-muted">Try searching with different keywords.</p>
+            <a href="{% url 'photographer:search' %}" class="btn btn-primary">Clear Search</a>
+        </div>
+        {% else %}
+        <!-- Default state -->
+        <div class="text-center py-5">
+            <i class="fas fa-search fa-4x text-muted mb-4"></i>
+            <h3>Search Our Photography Collection</h3>
+            <p class="text-muted">Use the search box above to find specific photos.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Featured Categories (when no search) -->
+{% if not query and categories %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 mb-3" data-aos="fade-up">Browse by Category</h2>
+            <p class="lead text-muted" data-aos="fade-up" data-aos-delay="100">
+                Explore our organized collections
+            </p>
+        </div>
+        
+        <div class="row">
+            {% for category in categories|slice:":6" %}
+            <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="{% widthratio forloop.counter 1 100 %}">
+                <a href="?category={{ category.slug }}" class="text-decoration-none">
+                    <div class="result-card">
+                                                 <div class="result-image" 
+                             style="background-image: url('{% if category.cover_image %}{{ category.cover_image.url }}{% else %}https://picsum.photos/400/250?random={{ category.id }}{% endif %}');">
+                            <div class="result-overlay">
+                                <div class="text-white">
+                                    <h5 class="mb-1">{{ category.name }}</h5>
+                                    <small>{{ category.images.count }} photo{{ category.images.count|pluralize }}</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-3">
+                            <p class="text-muted mb-0">{{ category.description|truncatechars:80 }}</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize AOS
+    AOS.init({
+        duration: 1000,
+        offset: 100,
+        once: true
+    });
+    
+    // Ensure GLightbox works on this page
+    setTimeout(() => {
+        if (!window.lightbox && typeof GLightbox !== 'undefined') {
+            console.log('Fallback: Initializing GLightbox for search page');
+            window.lightbox = GLightbox({
+                selector: '[data-glightbox]',
+                touchNavigation: true,
+                loop: true,
+                autoplayVideos: false
+            });
+        } else if (window.refreshLightbox) {
+            console.log('Refreshing existing lightbox for search page');
+            window.refreshLightbox();
+        }
+    }, 1000);
+    
+    // Auto-focus search input
+    const searchInput = document.querySelector('.search-input');
+    if (searchInput && !searchInput.value) {
+        searchInput.focus();
+    }
+    
+    // Load more functionality (placeholder)
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+    if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', function() {
+            // This would typically load more results via AJAX
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+            // For now, just hide the button
+            setTimeout(() => {
+                this.style.display = 'none';
+            }, 1000);
+        });
+    }
+});
+</script>
+{% endblock %} 
