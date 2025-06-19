@@ -17,15 +17,34 @@ from .forms import ContactForm
 
 def get_site_settings():
     """Helper function to get or create site settings"""
-    settings, created = SiteSettings.objects.get_or_create(
-        pk=1,
-        defaults={
-            'photographer_name': 'Professional Photographer',
-            'tagline': 'Capturing Life\'s Beautiful Moments',
-            'about_text': 'Professional photographer with years of experience capturing precious moments.',
-        }
-    )
-    return settings
+    try:
+        settings, created = SiteSettings.objects.get_or_create(
+            pk=1,
+            defaults={
+                'photographer_name': 'Professional Photographer',
+                'tagline': 'Capturing Life\'s Beautiful Moments',
+                'about_text': 'Professional photographer with years of experience capturing precious moments.',
+                'hero_title': 'Professional Photography Studio',
+                'hero_subtitle': 'Creating timeless memories through the art of photography',
+                'email': 'contact@studio.com',
+                'phone': '+1 (555) 123-4567',
+                'address': '123 Photography Lane, Creative City',
+            }
+        )
+        return settings
+    except Exception as e:
+        # Return default settings if database isn't ready
+        from types import SimpleNamespace
+        return SimpleNamespace(
+            photographer_name='Professional Photographer',
+            tagline='Capturing Life\'s Beautiful Moments',
+            about_text='Professional photographer with years of experience.',
+            hero_title='Professional Photography Studio',
+            hero_subtitle='Creating timeless memories through the art of photography',
+            email='contact@studio.com',
+            phone='+1 (555) 123-4567',
+            address='123 Photography Lane, Creative City',
+        )
 
 
 def home(request):
