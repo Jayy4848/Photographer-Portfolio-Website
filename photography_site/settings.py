@@ -92,23 +92,13 @@ WSGI_APPLICATION = 'photography_site.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# Fix database configuration for Vercel
-if 'VERCEL' in os.environ:
-    # Use in-memory SQLite for Vercel (since filesystem is read-only)
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': ':memory:',
-        }
+# Simplified database configuration for Vercel
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': ':memory:',
     }
-else:
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
-            conn_max_age=600,
-            conn_health_checks=True,
-        )
-    }
+}
 
 
 # Password validation
