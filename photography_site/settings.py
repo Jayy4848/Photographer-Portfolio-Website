@@ -93,23 +93,12 @@ WSGI_APPLICATION = 'photography_site.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# Updated database configuration for Vercel
-if 'VERCEL' in os.environ:
-    # Use a temporary file-based SQLite for Vercel (better than memory)
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': '/tmp/db.sqlite3',
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
-else:
-    # Local development database
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+}
 
 
 # Password validation
@@ -148,20 +137,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# Updated static files configuration for Vercel
-if 'VERCEL' in os.environ:
-    # For Vercel deployment
-    STATICFILES_DIRS = [BASE_DIR / 'static']
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-    # Use simple static files storage for Vercel
-    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
-else:
-    # For local development
-    STATICFILES_DIRS = [
-        BASE_DIR / 'static',
-    ]
-    STATIC_ROOT = BASE_DIR / 'staticfiles'
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media files
 MEDIA_URL = '/media/'
