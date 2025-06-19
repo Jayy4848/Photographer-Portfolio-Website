@@ -20,11 +20,5 @@
       "src": "/(.*)",
       "dest": "photography_site/wsgi.py"
     }
-  ],
-  "functions": {
-    "photography_site/wsgi.py": {
-      "maxDuration": 30
-    }
-  },
-  "outputDirectory": "staticfiles"
+  ]
 } 
