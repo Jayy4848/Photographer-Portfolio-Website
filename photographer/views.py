@@ -52,15 +52,9 @@ def home(request):
     site_settings = get_site_settings()
     
     # Initialize empty querysets to handle missing tables
-    featured_categories = Category.objects.none()
     featured_images = GalleryImage.objects.none()
     featured_testimonials = Testimonial.objects.none()
     recent_awards = Award.objects.none()
-    
-    try:
-        featured_categories = Category.objects.filter(is_featured=True)[:6]
-    except:
-        pass
     
     try:
         featured_images = GalleryImage.objects.filter(is_featured=True)[:8]
@@ -82,7 +76,6 @@ def home(request):
     
     context = {
         'site_settings': site_settings,
-        'featured_categories': featured_categories,
         'featured_images': featured_images,
         'featured_testimonials': featured_testimonials,
         'recent_awards': recent_awards,

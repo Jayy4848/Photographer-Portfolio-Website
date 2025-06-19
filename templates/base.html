@@ -84,9 +84,13 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{% url 'photographer:gallery_list' %}">All Galleries</a></li>
-                            {% for category in featured_categories %}
-                            <li><a class="dropdown-item" href="{% url 'photographer:gallery_detail' category.slug %}">{{ category.name }}</a></li>
-                            {% endfor %}
+                            {% if featured_categories %}
+                                {% for category in featured_categories %}
+                                <li><a class="dropdown-item" href="{% url 'photographer:gallery_detail' category.slug %}">{{ category.name }}</a></li>
+                                {% empty %}
+                                <!-- No categories available yet -->
+                                {% endfor %}
+                            {% endif %}
                         </ul>
                     </li>
                     <li class="nav-item">
