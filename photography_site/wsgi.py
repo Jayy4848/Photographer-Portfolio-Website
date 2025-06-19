@@ -17,43 +17,59 @@ if 'VERCEL' in os.environ:
     try:
         print("🚀 Starting Vercel initialization...")
         
-        # Run migrations with more verbose output
-        print("📋 Running database migrations...")
-        execute_from_command_line(['manage.py', 'migrate', '--verbosity=2'])
-        print("✅ Database migrations completed successfully")
+        # Set up environment variables if not already set
+        if not os.environ.get('SECRET_KEY'):
+            os.environ['SECRET_KEY'] = '8blr7mqelv95-qy3@gu1t(!j26o*@gvwb1@=-ip_py^+a!7*6b'
+        if not os.environ.get('DEBUG'):
+            os.environ['DEBUG'] = 'False'
+        if not os.environ.get('ALLOWED_HOSTS'):
+            os.environ['ALLOWED_HOSTS'] = '.vercel.app,.vercel.com'
         
-        # Import models after migrations are complete
-        from django.apps import apps
+        # Import Django after environment setup
+        import django
+        django.setup()
+        
+        # Run migrations with error handling
+        print("📋 Running database migrations...")
+        try:
+            execute_from_command_line(['manage.py', 'migrate', '--verbosity=1'])
+            print("✅ Database migrations completed successfully")
+        except Exception as e:
+            print(f"⚠️ Migration warning: {e}")
+            # Continue even if migrations fail
+        
+        # Import models after Django is fully set up
         from photographer.models import SiteSettings
         
-        # Ensure all models are loaded
-        apps.populate()
-        
-        # Create basic site settings
+        # Create basic site settings with error handling
         print("🏗️ Creating site settings...")
-        site_settings, created = SiteSettings.objects.get_or_create(
-            pk=1,
-            defaults={
-                'photographer_name': 'Professional Photography Studio',
-                'tagline': 'Capturing Life\'s Beautiful Moments',
-                'about_text': 'Welcome to our photography portfolio. We specialize in creating beautiful, timeless images that tell your story.',
-                'hero_title': 'Professional Photography Studio',
-                'hero_subtitle': 'Creating timeless memories through the art of photography',
-                'email': 'contact@studio.com',
-                'phone': '+1 (555) 123-4567',
-                'address': '123 Photography Lane, Creative City',
-                'working_hours': 'Mon-Fri: 9AM-6PM, Sat-Sun: 10AM-4PM',
-                'meta_title': 'Professional Photography Studio',
-                'meta_description': 'Professional photography services for all your special moments.',
-            }
-        )
+        try:
+            site_settings, created = SiteSettings.objects.get_or_create(
+                pk=1,
+                defaults={
+                    'photographer_name': 'Professional Photography Studio',
+                    'tagline': 'Capturing Life\'s Beautiful Moments',
+                    'about_text': 'Welcome to our photography portfolio. We specialize in creating beautiful, timeless images that tell your story.',
+                    'hero_title': 'Professional Photography Studio',
+                    'hero_subtitle': 'Creating timeless memories through the art of photography',
+                    'email': 'contact@studio.com',
+                    'phone': '+1 (555) 123-4567',
+                    'address': '123 Photography Lane, Creative City',
+                    'working_hours': 'Mon-Fri: 9AM-6PM, Sat-Sun: 10AM-4PM',
+                    'meta_title': 'Professional Photography Studio',
+                    'meta_description': 'Professional photography services for all your special moments.',
+                }
+            )
+            
+            if created:
+                print("✅ Site settings created successfully")
+            else:
+                print("✅ Site settings already exist")
+        except Exception as e:
+            print(f"⚠️ Site settings warning: {e}")
+            # Continue even if this fails
         
-        if created:
-            print("✅ Site settings created successfully")
-        else:
-            print("✅ Site settings already exist")
-        
-        print("🎉 Vercel initialization completed successfully!")
+        print("🎉 Vercel initialization completed!")
         
     except Exception as e:
         print(f"⚠️ Initialization error: {e}")

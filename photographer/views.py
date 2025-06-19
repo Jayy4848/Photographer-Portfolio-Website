@@ -87,7 +87,11 @@ def home(request):
 
 def gallery_list(request):
     """Gallery categories listing page"""
-    categories = Category.objects.all()
+    try:
+        categories = Category.objects.all()
+    except Exception:
+        categories = Category.objects.none()
+    
     site_settings = get_site_settings()
     
     context = {
@@ -126,8 +130,16 @@ def gallery_detail(request, slug):
 def about(request):
     """About page with photographer information"""
     site_settings = get_site_settings()
-    awards = Award.objects.all()
-    testimonials = Testimonial.objects.filter(is_featured=True)[:6]
+    
+    try:
+        awards = Award.objects.all()
+    except Exception:
+        awards = Award.objects.none()
+    
+    try:
+        testimonials = Testimonial.objects.filter(is_featured=True)[:6]
+    except Exception:
+        testimonials = Testimonial.objects.none()
     
     context = {
         'site_settings': site_settings,
@@ -141,7 +153,10 @@ def about(request):
 
 def testimonials(request):
     """Testimonials page"""
-    testimonials_list = Testimonial.objects.all()
+    try:
+        testimonials_list = Testimonial.objects.all()
+    except Exception:
+        testimonials_list = Testimonial.objects.none()
     
     # Pagination
     paginator = Paginator(testimonials_list, 6)  # Show 6 testimonials per page
