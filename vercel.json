@@ -5,13 +5,6 @@
       "src": "photography_site/wsgi.py",
       "use": "@vercel/python",
       "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
-    },
-    {
-      "src": "build_files.sh",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "staticfiles_build"
-      }
     }
   ],
   "routes": [
@@ -20,8 +13,18 @@
       "dest": "/static/$1"
     },
     {
+      "src": "/media/(.*)",
+      "dest": "/media/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "photography_site/wsgi.py"
     }
-  ]
+  ],
+  "functions": {
+    "photography_site/wsgi.py": {
+      "maxDuration": 30
+    }
+  },
+  "outputDirectory": "staticfiles"
 } 
