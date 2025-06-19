@@ -4,11 +4,5 @@
       "src": "photography_site/wsgi.py",
       "use": "@vercel/python"
     }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "photography_site/wsgi.py"
-    }
   ]
 } 

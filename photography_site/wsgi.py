@@ -7,7 +7,8 @@ from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'photography_site.settings')
 
-application = get_wsgi_application()
+# This is what Vercel needs
+app = get_wsgi_application()
 
-# For Vercel
-app = application
+def handler(request):
+    return app(request.environ, request.start_response)

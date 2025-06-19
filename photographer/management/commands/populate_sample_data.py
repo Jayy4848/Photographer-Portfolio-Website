@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.core.files.base import ContentFile
 from photographer.models import Category, GalleryImage, Testimonial, SiteSettings
-import requests
+# import requests  # Temporarily disabled for Vercel deployment
 from datetime import date, datetime
 import random
 
